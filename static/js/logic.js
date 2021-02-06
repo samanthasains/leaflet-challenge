@@ -52,7 +52,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     }
 });
 
-// Create function to correlate colors for legend
+// Create function to correlate colors for legend (used code from https://gis.stackexchange.com/questions/133630/adding-leaflet-legend)
 function getColor(d) {
     return d === '-10 - 10'  ? "greenyellow" :
            d === '10 - 30'  ? "yellow" :
@@ -62,7 +62,7 @@ function getColor(d) {
                         "darkred";
 }
 
-// Create legend
+// Create legend (used code from https://gis.stackexchange.com/questions/133630/adding-leaflet-legend)
 var legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
 
