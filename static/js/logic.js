@@ -1,7 +1,7 @@
 // Create a map object
 var myMap = L.map("map", {
-    center: [36.54, -80.91],
-    zoom: 3
+    center: [50,-84],
+    zoom: 4
   });
   
   L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -15,19 +15,40 @@ var myMap = L.map("map", {
 
 
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson", function(data){
-    console.log(data.features[0])
+    console.log(data.features[0].geometry.coordinates[2])
 
     // Loop through all earthquakes
     for (var i=0; i < data.features.length; i++) {
-        console.log([data.features[i].geometry.coordinates[0], data.features[i].geometry.coordinates[1]])
+
+        // Conditionals for depth
+        var color = "";
+        if (data.features[i].geometry.coordinates[2] > 90) {
+            color = "red";
+        }
+        else if (data.features[i].geometry.coordinates[2] > 70) {
+            color = "orangered";
+        }
+        else if (data.features[i].geometry.coordinates[2] > 50) {
+            color = "orange";
+        }
+        else if (data.features[i].geometry.coordinates[2] > 30) {
+            color = "salmon";
+        }
+        else if (data.features[i].geometry.coordinates[2] > 10) {
+            color = "yellow";
+        }
+        else {
+            color = "chartreuse";
+        };
+
         // Add circles to map
-        L.circle([data.features[i].geometry.coordinates[0], data.features[i].geometry.coordinates[1]], {
+        L.circle([data.features[i].geometry.coordinates[1], data.features[i].geometry.coordinates[0]], {
         fillOpacity: 0.75,
-        color: "white",
-        fillColor: "red",
+        color: color,
+        fillColor: color,
 
         // Adjust radius
-        radius: data.features[i].properties.mag * 10000
+        radius: data.features[i].properties.mag * 20000
         }).bindPopup("<h1>" + data.features[i].properties.place + "</h1> <hr> <h3>Magnitude: " + data.features[i].properties.mag + "</h3> <hr> <h3>Coordinates: " + [data.features[i].geometry.coordinates[0], data.features[i].geometry.coordinates[1]]).addTo(myMap);
     }
 
