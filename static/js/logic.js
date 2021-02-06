@@ -77,7 +77,6 @@ var legend = L.control({position: 'bottomright'});
             div.innerHTML += 
             labels.push(
                 '<span class="dot" style="background:' +getColor(categories[i]) + '"></span> ' + (categories[i] ? categories[i] : '+'));
-
         }
         div.innerHTML = labels.join('<br>');
     return div;
