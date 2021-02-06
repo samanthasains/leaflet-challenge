@@ -12,94 +12,26 @@ var myMap = L.map("map", {
     id: "mapbox/streets-v11",
     accessToken: API_KEY
   }).addTo(myMap);
-  
 
 
-// // Create the map with our layers
-// var map = L.map("map", {
-//     center: [36.54, -80.91],
-//     zoom: 5,
-//   });
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson", function(data){
+    console.log(data.features[0])
 
-// // Create the tile layer that will be the background of our map
-// L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-//   attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-//   maxZoom: 18,
-//   id: "mapbox/streets-v11",
-//   accessToken: API_KEY
-// }).addTo(map);
+    // Loop through all earthquakes
+    for (var i=0; i < data.features.length; i++) {
+        console.log([data.features[i].geometry.coordinates[0], data.features[i].geometry.coordinates[1]])
+        // Add circles to map
+        L.circle([data.features[i].geometry.coordinates[0], data.features[i].geometry.coordinates[1]], {
+        fillOpacity: 0.75,
+        color: "white",
+        fillColor: "red",
 
+        // Adjust radius
+        radius: data.features[i].properties.mag * 10000
+        }).bindPopup("<h1>" + data.features[i].properties.place + "</h1> <hr> <h3>Magnitude: " + data.features[i].properties.mag + "</h3> <hr> <h3>Coordinates: " + [data.features[i].geometry.coordinates[0], data.features[i].geometry.coordinates[1]]).addTo(myMap);
+    }
 
-// // Initialize all of the LayerGroups we'll be using
-// var layers = {
-//   COMING_SOON: new L.LayerGroup(),
-//   EMPTY: new L.LayerGroup(),
-//   LOW: new L.LayerGroup(),
-//   NORMAL: new L.LayerGroup(),
-//   OUT_OF_ORDER: new L.LayerGroup()
-// };
-
-// // Add our 'lightmap' tile layer to the map
-// lightmap.addTo(map);
-
-// // Create an overlays object to add to the layer control
-// var overlays = {
-//   "Coming Soon": layers.COMING_SOON,
-//   "Empty Stations": layers.EMPTY,
-//   "Low Stations": layers.LOW,
-//   "Healthy Stations": layers.NORMAL,
-//   "Out of Order": layers.OUT_OF_ORDER
-// };
-
-// // Create a control for our layers, add our overlay layers to it
-// L.control.layers(null, overlays).addTo(map);
-
-// // Create a legend to display information about our map
-// var info = L.control({
-//   position: "bottomright"
-// });
-
-// // When the layer control is added, insert a div with the class of "legend"
-// info.onAdd = function() {
-//   var div = L.DomUtil.create("div", "legend");
-//   return div;
-// };
-// // Add the info legend to the map
-// info.addTo(map);
-
-// // Initialize an object containing icons for each layer group
-// var icons = {
-//   COMING_SOON: L.ExtraMarkers.icon({
-//     icon: "ion-settings",
-//     iconColor: "white",
-//     markerColor: "yellow",
-//     shape: "star"
-//   }),
-//   EMPTY: L.ExtraMarkers.icon({
-//     icon: "ion-android-bicycle",
-//     iconColor: "white",
-//     markerColor: "red",
-//     shape: "circle"
-//   }),
-//   OUT_OF_ORDER: L.ExtraMarkers.icon({
-//     icon: "ion-minus-circled",
-//     iconColor: "white",
-//     markerColor: "blue-dark",
-//     shape: "penta"
-//   }),
-//   LOW: L.ExtraMarkers.icon({
-//     icon: "ion-android-bicycle",
-//     iconColor: "white",
-//     markerColor: "orange",
-//     shape: "circle"
-//   }),
-//   NORMAL: L.ExtraMarkers.icon({
-//     icon: "ion-android-bicycle",
-//     iconColor: "white",
-//     markerColor: "green",
-//     shape: "circle"
-//   })
-// };
+});
 
 // // Perform an API call to the Citi Bike Station Information endpoint
 // d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson", function(infoRes) {
@@ -164,7 +96,7 @@ var myMap = L.map("map", {
 
 // //     // Call the updateLegend function, which will... update the legend!
 // //     updateLegend(updatedAt, stationCount);
-//   });
+// //   });
 // });
 
 // // Update the legend's innerHTML with the last updated time and station count
